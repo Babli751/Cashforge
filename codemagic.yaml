@@ -1,0 +1,39 @@
+workflows:
+  ios-testflight:
+    name: CashForge iOS TestFlight
+    max_build_duration: 60
+    integrations:
+      app_store_connect: cashforge_asc_key
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.cashforge.app
+      vars:
+        XCODE_SCHEME: "CashForge"
+        XCODE_PROJECT: "CashForge.xcodeproj"
+      xcode: latest
+    scripts:
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$(xcode-project detect-bundle-id)" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          cd $CM_BUILD_DIR
+          agvtool new-version -all $(app-store-connect get-latest-app-store-build-number "$(xcode-project detect-bundle-id)" | awk '{print $NF + 1}')
+      - name: Build ipa
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
