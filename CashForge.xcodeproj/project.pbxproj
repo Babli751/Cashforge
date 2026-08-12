@@ -1,0 +1,433 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		704B9A27F65F4B0CB7E6CBD9AA /* CashForgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F488DAD28FDB44D1BCE2211FAA /* CashForgeApp.swift */; };
+		044E046895CC4A58B76E57E8A /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD1A5FD5183449799EF7DA8A /* Models.swift */; };
+		E31E16DDCA094936B2E699EAA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F57A1842A5A4185A7BBDCA1A /* Theme.swift */; };
+		4C5FC1C0267F492F95BCD20CA /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A68AAA43ED4B28A3890CE7A /* AppStore.swift */; };
+		6EAB89E6AC9C4F78AF5E488BA /* ContentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2C819E36F64012AFF61586A /* ContentService.swift */; };
+		8F5745C948AD47BCBC094F75A /* PurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B10A522C72453D832BEC78A /* PurchaseService.swift */; };
+		690FAAC6ED674046A1533C9AA /* GameDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40409776D5744E8A9FE1BF96A /* GameDashboardView.swift */; };
+		81E25535146A422B847D1AA6A /* HomeFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B65E8ADBCC349D4B6E28D20A /* HomeFeedView.swift */; };
+		974222C4F9114BFCA943BEE5A /* MySummariesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C67B53CA65B42419A64AA05A /* MySummariesView.swift */; };
+		0665B49051BD489593849B4AA /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A68EC437C9548E2A172BAF1A /* ProfileView.swift */; };
+		B04160250E29440D8E4ED5BDA /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6759ADA462294303807CE4BFA /* RootTabView.swift */; };
+		F2BCDAF2DA114AAB963485C8A /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B7FF8270A24EED955C744EA /* SummaryView.swift */; };
+		C83E8BB478B44058A49F0B06A /* VideoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F5136277A42378BBC966FA /* VideoDetailView.swift */; };
+		5317AF6BDDF34037BDC25A8C /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A568E97ADE054DF6B45B2A3E /* SplashView.swift */; };
+		CD22297E1622410186F143DF /* BusinessStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D0F18493F441B2844B1E19 /* BusinessStartView.swift */; };
+		B0251814E5D54CCBAD8FBA85 /* AdvisorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */; };
+		013DF5FBDE50400596E6F24F /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */; };
+		D4572FD39D6F47D1AE6E5B83 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A041DD32CCA7492492EBBF88 /* SyncService.swift */; };
+		E28FB69509E546DFAD51F002 /* AuthSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044061B6FBE4B2BB3A66576 /* AuthSheet.swift */; };
+		5B800A0C7DBF4490A95E5FCC /* ProfileInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */; };
+		0BC9132C52B8408DBA70438F /* PersonalInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B918F3F4C604DD1B72D59E5 /* PersonalInfoSheet.swift */; };
+		7B037E82494E4B5489E2B50C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8819C2252E4C1C820D7D4D /* SettingsView.swift */; };
+		0271F9D28F1444C19C3DC66D /* CashForge.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4F548F88BE824FEC83D285FCA /* CashForge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CashForge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F488DAD28FDB44D1BCE2211FAA /* CashForgeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashForgeApp.swift; sourceTree = "<group>"; };
+		622CF69CDEDB47D2AF9E0BD7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1CD1A5FD5183449799EF7DA8A /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		8F57A1842A5A4185A7BBDCA1A /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B4A68AAA43ED4B28A3890CE7A /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		EC2C819E36F64012AFF61586A /* ContentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentService.swift; sourceTree = "<group>"; };
+		72B10A522C72453D832BEC78A /* PurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseService.swift; sourceTree = "<group>"; };
+		40409776D5744E8A9FE1BF96A /* GameDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDashboardView.swift; sourceTree = "<group>"; };
+		2B65E8ADBCC349D4B6E28D20A /* HomeFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedView.swift; sourceTree = "<group>"; };
+		8C67B53CA65B42419A64AA05A /* MySummariesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySummariesView.swift; sourceTree = "<group>"; };
+		2A68EC437C9548E2A172BAF1A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		6759ADA462294303807CE4BFA /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		90B7FF8270A24EED955C744EA /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		A54F5136277A42378BBC966FA /* VideoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailView.swift; sourceTree = "<group>"; };
+		A568E97ADE054DF6B45B2A3E /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		61D0F18493F441B2844B1E19 /* BusinessStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessStartView.swift; sourceTree = "<group>"; };
+		F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisorEngine.swift; sourceTree = "<group>"; };
+		9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		A041DD32CCA7492492EBBF88 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
+		6044061B6FBE4B2BB3A66576 /* AuthSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSheet.swift; sourceTree = "<group>"; };
+		4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoService.swift; sourceTree = "<group>"; };
+		1B918F3F4C604DD1B72D59E5 /* PersonalInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoSheet.swift; sourceTree = "<group>"; };
+		0A8819C2252E4C1C820D7D4D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = CashForge.storekit; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		01556C4C1CC945119EF94AB3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A173F6DEC7D5489CA215750FA = {
+			isa = PBXGroup;
+			children = (
+				C3BF3A6CF66C44369F2205AFA /* CashForge */,
+				52BBA721E8C747F2A34E315AA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		52BBA721E8C747F2A34E315AA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4F548F88BE824FEC83D285FCA /* CashForge.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C3BF3A6CF66C44369F2205AFA /* CashForge */ = {
+			isa = PBXGroup;
+			children = (
+				F488DAD28FDB44D1BCE2211FAA /* CashForgeApp.swift */,
+				82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */,
+				622CF69CDEDB47D2AF9E0BD7A /* Info.plist */,
+				2ECFFC44C2064ADE9A8DCE91A /* Models */,
+				8AE0BB31762C4180A2483720A /* Views */,
+				D45112B1E47040BA8D535266A /* Services */,
+				C4AD173C8FBD49FEB01CAA19A /* Resources */,
+			);
+			path = CashForge;
+			sourceTree = "<group>";
+		};
+		2ECFFC44C2064ADE9A8DCE91A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1CD1A5FD5183449799EF7DA8A /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8AE0BB31762C4180A2483720A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A568E97ADE054DF6B45B2A3E /* SplashView.swift */,
+				6759ADA462294303807CE4BFA /* RootTabView.swift */,
+				2B65E8ADBCC349D4B6E28D20A /* HomeFeedView.swift */,
+				A54F5136277A42378BBC966FA /* VideoDetailView.swift */,
+				90B7FF8270A24EED955C744EA /* SummaryView.swift */,
+				40409776D5744E8A9FE1BF96A /* GameDashboardView.swift */,
+				61D0F18493F441B2844B1E19 /* BusinessStartView.swift */,
+				6044061B6FBE4B2BB3A66576 /* AuthSheet.swift */,
+				1B918F3F4C604DD1B72D59E5 /* PersonalInfoSheet.swift */,
+				0A8819C2252E4C1C820D7D4D /* SettingsView.swift */,
+				8C67B53CA65B42419A64AA05A /* MySummariesView.swift */,
+				2A68EC437C9548E2A172BAF1A /* ProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D45112B1E47040BA8D535266A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B4A68AAA43ED4B28A3890CE7A /* AppStore.swift */,
+				EC2C819E36F64012AFF61586A /* ContentService.swift */,
+				72B10A522C72453D832BEC78A /* PurchaseService.swift */,
+				F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */,
+				9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */,
+				A041DD32CCA7492492EBBF88 /* SyncService.swift */,
+				4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C4AD173C8FBD49FEB01CAA19A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8F57A1842A5A4185A7BBDCA1A /* Theme.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7C5E42CCA80D44ABAF17CE85A /* CashForge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20CC6AD645934D99B1068C78A /* Build configuration list for PBXNativeTarget "CashForge" */;
+			buildPhases = (
+				D38D9CB9DAFB4B5A8640E6C9A /* Sources */,
+				01556C4C1CC945119EF94AB3A /* Frameworks */,
+				AFB4E6F0D2E64A59A2C68B00A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CashForge;
+			productName = CashForge;
+			productReference = 4F548F88BE824FEC83D285FCA /* CashForge.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F9E258F4C6724225A5B853AFA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					7C5E42CCA80D44ABAF17CE85A = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = E9F4F99FE32442C7B7775EAFA /* Build configuration list for PBXProject "CashForge" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A173F6DEC7D5489CA215750FA;
+			productRefGroup = 52BBA721E8C747F2A34E315AA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7C5E42CCA80D44ABAF17CE85A /* CashForge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AFB4E6F0D2E64A59A2C68B00A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0271F9D28F1444C19C3DC66D /* CashForge.storekit in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D38D9CB9DAFB4B5A8640E6C9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				704B9A27F65F4B0CB7E6CBD9AA /* CashForgeApp.swift in Sources */,
+				044E046895CC4A58B76E57E8A /* Models.swift in Sources */,
+				E31E16DDCA094936B2E699EAA /* Theme.swift in Sources */,
+				4C5FC1C0267F492F95BCD20CA /* AppStore.swift in Sources */,
+				6EAB89E6AC9C4F78AF5E488BA /* ContentService.swift in Sources */,
+				8F5745C948AD47BCBC094F75A /* PurchaseService.swift in Sources */,
+				690FAAC6ED674046A1533C9AA /* GameDashboardView.swift in Sources */,
+				81E25535146A422B847D1AA6A /* HomeFeedView.swift in Sources */,
+				974222C4F9114BFCA943BEE5A /* MySummariesView.swift in Sources */,
+				0665B49051BD489593849B4AA /* ProfileView.swift in Sources */,
+				B04160250E29440D8E4ED5BDA /* RootTabView.swift in Sources */,
+				F2BCDAF2DA114AAB963485C8A /* SummaryView.swift in Sources */,
+				C83E8BB478B44058A49F0B06A /* VideoDetailView.swift in Sources */,
+				5317AF6BDDF34037BDC25A8C /* SplashView.swift in Sources */,
+				CD22297E1622410186F143DF /* BusinessStartView.swift in Sources */,
+				B0251814E5D54CCBAD8FBA85 /* AdvisorEngine.swift in Sources */,
+				013DF5FBDE50400596E6F24F /* AuthService.swift in Sources */,
+				D4572FD39D6F47D1AE6E5B83 /* SyncService.swift in Sources */,
+				E28FB69509E546DFAD51F002 /* AuthSheet.swift in Sources */,
+				5B800A0C7DBF4490A95E5FCC /* ProfileInfoService.swift in Sources */,
+				0BC9132C52B8408DBA70438F /* PersonalInfoSheet.swift in Sources */,
+				7B037E82494E4B5489E2B50C /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FAC1AEA2A608487E964B10E4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F0A8FE363CAC48E18D0277C0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		937C26FAB10A428D84DE8790A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CashForge/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cashforge.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		65FF03381667462596718F88A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CashForge/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cashforge.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E9F4F99FE32442C7B7775EAFA /* Build configuration list for PBXProject "CashForge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAC1AEA2A608487E964B10E4A /* Debug */,
+				F0A8FE363CAC48E18D0277C0A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		20CC6AD645934D99B1068C78A /* Build configuration list for PBXNativeTarget "CashForge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				937C26FAB10A428D84DE8790A /* Debug */,
+				65FF03381667462596718F88A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F9E258F4C6724225A5B853AFA /* Project object */;
+}

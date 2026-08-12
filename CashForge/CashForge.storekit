@@ -1,0 +1,63 @@
+{
+  "identifier" : "CashForge",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "unlock_sample1",
+      "localizations" : [
+        {
+          "description" : "Unlock the full summary and key takeaways for this video.",
+          "displayName" : "Unlock Summary",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.cashforge.unlock.sample-1",
+      "referenceName" : "Unlock Sample Video 1",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6720000000",
+    "_developerTeamID" : "0000000000",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "cashforge_sub_group",
+      "localizations" : [],
+      "name" : "CashForge Subscriptions",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "monthly_sub",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlimited access to all video summaries and the business simulation.",
+              "displayName" : "CashForge Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.cashforge.subscription.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Subscription",
+          "subscriptionGroupID" : "cashforge_sub_group",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
