@@ -30,6 +30,7 @@
 		0BC9132C52B8408DBA70438F /* PersonalInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B918F3F4C604DD1B72D59E5 /* PersonalInfoSheet.swift */; };
 		7B037E82494E4B5489E2B50C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8819C2252E4C1C820D7D4D /* SettingsView.swift */; };
 		0271F9D28F1444C19C3DC66D /* CashForge.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */; };
+		9A1B2C3D4E5F60718293A4B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1B2C3D4E5F60718293A4B5 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		1B918F3F4C604DD1B72D59E5 /* PersonalInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoSheet.swift; sourceTree = "<group>"; };
 		0A8819C2252E4C1C820D7D4D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = CashForge.storekit; sourceTree = "<group>"; };
+		8A1B2C3D4E5F60718293A4B5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 			children = (
 				F488DAD28FDB44D1BCE2211FAA /* CashForgeApp.swift */,
 				82A6EAA3FEE44531BBDD1B92 /* CashForge.storekit */,
+				8A1B2C3D4E5F60718293A4B5 /* Assets.xcassets */,
 				622CF69CDEDB47D2AF9E0BD7A /* Info.plist */,
 				2ECFFC44C2064ADE9A8DCE91A /* Models */,
 				8AE0BB31762C4180A2483720A /* Views */,
@@ -209,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0271F9D28F1444C19C3DC66D /* CashForge.storekit in Resources */,
+				9A1B2C3D4E5F60718293A4B5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +367,7 @@
 		937C26FAB10A428D84DE8790A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -386,6 +391,7 @@
 		65FF03381667462596718F88A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
