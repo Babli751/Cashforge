@@ -24,7 +24,8 @@ workflows:
       - name: Increment build number
         script: |
           cd $CM_BUILD_DIR
-          agvtool new-version -all $(app-store-connect get-latest-app-store-build-number "$(xcode-project detect-bundle-id)" | awk '{print $NF + 1}')
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$(xcode-project detect-bundle-id)" || echo 0)
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
       - name: Build ipa
         script: |
           xcode-project build-ipa \
