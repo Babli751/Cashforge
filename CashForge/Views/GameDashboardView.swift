@@ -6,6 +6,10 @@ struct GameDashboardView: View {
     @State private var scenarioResult: ScenarioResult?
     @State private var showBankruptAlert = false
     @State private var scenarioResolved = false
+    @State private var showLevelUp = false
+    @State private var leveledUpTo = 0
+    @State private var pendingEvent: MarketEvent?
+    @State private var showBudgetSheet = false
     @Environment(\.colorScheme) var colorScheme
 
     private var business: BusinessState { store.business }
@@ -26,18 +30,24 @@ struct GameDashboardView: View {
                     header
                     statsGrid
                     advisorCard
+                    budgetCard
 
                     if let scenario = store.currentScenario {
                         lessonCard(scenario)
                     }
 
                     Button("Next Month →") {
-                        let narrative = store.advanceMonth()
+                        let levelBefore = business.level
+                        let result = store.advanceMonth()
                         scenarioResolved = false
+                        pendingEvent = result.event
                         if store.business.isBankrupt {
                             showBankruptAlert = true
+                        } else if store.business.level > levelBefore {
+                            leveledUpTo = store.business.level
+                            showLevelUp = true
                         } else {
-                            monthResultText = narrative
+                            monthResultText = result.narrative
                             showMonthResult = true
                         }
                     }
@@ -77,14 +87,23 @@ struct GameDashboardView: View {
         .alert("Month \(business.month - 1) Results", isPresented: $showMonthResult) {
             Button("Continue") {}
         } message: {
-            Text(monthResultText)
+            Text(monthResultText + eventSuffix)
+        }
+        .sheet(isPresented: $showLevelUp) {
+            LevelUpView(level: leveledUpTo, event: pendingEvent) { showLevelUp = false }
+                .presentationDetents([.medium])
         }
         .alert("You're out of cash", isPresented: $showBankruptAlert) {
+            if !business.hasUsedBailout {
+                Button("Take Emergency Loan ($100)") {
+                    store.acceptBailout()
+                }
+            }
             Button("Start Over", role: .destructive) {
                 store.business.hasStarted = false
             }
         } message: {
-            Text(bankruptcyExplanation)
+            Text(bankruptcyExplanation + (business.hasUsedBailout ? "" : "\n\nYou can take a one-time emergency loan to keep going instead of starting over."))
         }
     }
 
@@ -137,6 +156,39 @@ struct GameDashboardView: View {
         .padding(.horizontal)
     }
 
+    private var budgetCard: some View {
+        Button {
+            showBudgetSheet = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "chart.pie.fill")
+                    .foregroundColor(Theme.gold(colorScheme))
+                    .font(.title3)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Invest This Month's Cash")
+                        .font(.subheadline.bold())
+                        .foregroundColor(Theme.text(colorScheme))
+                    Text("Put cash toward marketing, product, or team")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .background(Theme.card(colorScheme))
+            .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal)
+        .sheet(isPresented: $showBudgetSheet) {
+            BudgetAllocationSheet()
+                .environmentObject(store)
+                .presentationDetents([.medium])
+        }
+    }
+
     private func lessonCard(_ scenario: Scenario) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("This Month You'll Learn")
@@ -161,6 +213,11 @@ struct GameDashboardView: View {
         .background(Theme.card(colorScheme))
         .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
         .padding(.horizontal)
+    }
+
+    private var eventSuffix: String {
+        guard let event = pendingEvent else { return "" }
+        return "\n\n📰 \(event.title): \(event.description)"
     }
 
     private var bankruptcyExplanation: String {
@@ -308,6 +365,146 @@ struct ScenarioResultView: View {
                 .padding(.top, 12)
         }
         .background(Theme.background(colorScheme).ignoresSafeArea())
+    }
+}
+
+struct BudgetAllocationSheet: View {
+    @EnvironmentObject var store: AppStore
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
+    @State private var selectedCategory: BudgetCategory = .marketing
+    @State private var amountText: String = ""
+
+    private var business: BusinessState { store.business }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Available cash: $\(Int(business.cash))")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+
+                    VStack(spacing: 10) {
+                        ForEach(BudgetCategory.allCases) { category in
+                            Button {
+                                selectedCategory = category
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Image(systemName: category.icon)
+                                        .foregroundColor(Theme.gold(colorScheme))
+                                        .frame(width: 28)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(category.rawValue)
+                                            .font(.headline)
+                                            .foregroundColor(Theme.text(colorScheme))
+                                        Text(category.explanation)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    Spacer()
+                                }
+                                .padding()
+                                .background(Theme.card(colorScheme))
+                                .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: Theme.cardRadius)
+                                        .stroke(selectedCategory == category ? Theme.gold(colorScheme) : Color.clear, lineWidth: 2)
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Amount to spend")
+                            .font(.caption.bold())
+                            .foregroundColor(Theme.gold(colorScheme))
+                        TextField("$0", text: $amountText)
+                            .keyboardType(.numberPad)
+                            .padding()
+                            .background(Theme.card(colorScheme))
+                            .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
+                            .foregroundColor(Theme.text(colorScheme))
+                    }
+                    .padding(.horizontal)
+
+                    Button("Invest") {
+                        guard let amount = Double(amountText) else { return }
+                        if store.allocateBudget(selectedCategory, amount: amount) {
+                            dismiss()
+                        }
+                    }
+                    .buttonStyle(GreenButtonStyle())
+                    .disabled((Double(amountText) ?? 0) <= 0 || (Double(amountText) ?? 0) > business.cash)
+                    .opacity((Double(amountText) ?? 0) <= 0 || (Double(amountText) ?? 0) > business.cash ? 0.4 : 1)
+                    .padding(.horizontal)
+                    .padding(.bottom, 24)
+                }
+                .padding(.top)
+            }
+            .background(Theme.background(colorScheme).ignoresSafeArea())
+            .navigationTitle("Invest Cash")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
+struct LevelUpView: View {
+    let level: Int
+    let event: MarketEvent?
+    let onDismiss: () -> Void
+    @Environment(\.colorScheme) var colorScheme
+    @State private var animateIn = false
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+            Image(systemName: "star.circle.fill")
+                .font(.system(size: 80))
+                .foregroundColor(Theme.gold(colorScheme))
+                .scaleEffect(animateIn ? 1 : 0.4)
+                .opacity(animateIn ? 1 : 0)
+                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: animateIn)
+
+            VStack(spacing: 8) {
+                Text("Level Up!")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(Theme.text(colorScheme))
+                Text("Your business reached Level \(level)")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+
+            if let event {
+                VStack(spacing: 4) {
+                    Text("📰 \(event.title)")
+                        .font(.caption.bold())
+                        .foregroundColor(Theme.gold(colorScheme))
+                    Text(event.description)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 32)
+            }
+
+            Spacer()
+
+            Button("Continue") { onDismiss() }
+                .buttonStyle(GoldButtonStyle())
+                .padding(.horizontal)
+                .padding(.bottom, 24)
+        }
+        .background(Theme.background(colorScheme).ignoresSafeArea())
+        .onAppear { animateIn = true }
     }
 }
 

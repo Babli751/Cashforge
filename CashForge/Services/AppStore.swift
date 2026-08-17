@@ -6,6 +6,11 @@ struct ScenarioResult {
     let lesson: String
 }
 
+struct MonthAdvanceResult {
+    let narrative: String
+    let event: MarketEvent?
+}
+
 @MainActor
 final class AppStore: ObservableObject {
     @Published var videos: [VideoItem] = []
@@ -24,6 +29,7 @@ final class AppStore: ObservableObject {
     private let contentService = ContentService()
     private let purchaseService = PurchaseService()
     private let syncService = SyncService()
+    private let gameCenterService = GameCenterService()
     private let businessStateKey = "businessState"
     private let playerProfileKey = "playerProfile"
     private var isSyncing = false
@@ -31,7 +37,32 @@ final class AppStore: ObservableObject {
     init() {
         loadBusiness()
         loadPlayerProfile()
+        updateStreak()
+        gameCenterService.authenticate()
         Task { await loadVideos() }
+    }
+
+    /// Updates the daily play streak: increments if the player last played yesterday,
+    /// resets to 1 if they skipped a day or more, and leaves it unchanged if they already
+    /// played today.
+    private func updateStreak() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let lastPlayed = playerProfile.lastPlayedDate else {
+            playerProfile.currentStreak = 1
+            playerProfile.lastPlayedDate = today
+            return
+        }
+        let lastPlayedDay = calendar.startOfDay(for: lastPlayed)
+        let daysSince = calendar.dateComponents([.day], from: lastPlayedDay, to: today).day ?? 0
+        if daysSince == 0 {
+            return
+        } else if daysSince == 1 {
+            playerProfile.currentStreak += 1
+        } else {
+            playerProfile.currentStreak = 1
+        }
+        playerProfile.lastPlayedDate = today
     }
 
     /// Called after a successful sign-in: fetches the account's saved progress from the backend
@@ -63,6 +94,8 @@ final class AppStore: ObservableObject {
             let snapshot = business
             Task { await syncService.saveBusiness(snapshot, token: token) }
         }
+
+        gameCenterService.submitCashEarned(business.cash)
     }
 
     private func loadPlayerProfile() {
@@ -117,6 +150,17 @@ final class AppStore: ObservableObject {
         business.appliedLessons.append(lesson)
     }
 
+    /// One-time emergency loan to recover from bankruptcy instead of restarting. Costs future
+    /// profit (added as debt via a lower starting cash) and can only be used once per business.
+    @discardableResult
+    func acceptBailout() -> Bool {
+        guard business.isBankrupt, !business.hasUsedBailout else { return false }
+        business.cash = 100
+        business.isBankrupt = false
+        business.hasUsedBailout = true
+        return true
+    }
+
     func startBusiness(_ type: BusinessType) {
         var fresh = BusinessState()
         fresh.hasStarted = true
@@ -139,15 +183,53 @@ final class AppStore: ObservableObject {
     @discardableResult
     func resolveScenario(_ choice: ScenarioChoice) -> ScenarioResult {
         business.cash += choice.cashDelta
-        business.customers = max(0, business.customers + choice.customerDelta)
+        business.customers = max(0, business.customers + softenedCustomerDelta(choice.customerDelta))
         business.pricePerCustomer = max(1, business.pricePerCustomer + choice.priceDelta)
         business.teamSize = max(0, business.teamSize + choice.teamDelta)
         applyLesson(choice.lesson)
         return ScenarioResult(summary: choice.resultSummary, lesson: choice.lesson)
     }
 
+    /// Reduces the size of negative customer swings using accumulated product quality —
+    /// better product = customers are more forgiving of setbacks. Positive deltas are untouched.
+    private func softenedCustomerDelta(_ delta: Int) -> Int {
+        guard delta < 0 else { return delta }
+        let reduction = min(business.productQualityBoost * 0.05, 0.5)
+        return Int(Double(delta) * (1 - reduction))
+    }
+
+    /// Spends cash on a growth category this month. Marketing has diminishing returns
+    /// (sqrt curve) to discourage dumping all cash into one category; Product and Team
+    /// build durable boosts that persist across months. There's no "Savings" spend —
+    /// choosing to save means simply not calling this at all.
     @discardableResult
-    func advanceMonth() -> String {
+    func allocateBudget(_ category: BudgetCategory, amount: Double) -> Bool {
+        guard amount > 0, amount <= business.cash else { return false }
+        business.cash -= amount
+
+        switch category {
+        case .marketing:
+            let newCustomers = Int((amount * 0.15).squareRoot() * 3)
+            business.customers += newCustomers
+        case .product:
+            business.productQualityBoost += amount / 200
+        case .team:
+            business.opsCapacityBoost += amount / 200
+        }
+        return true
+    }
+
+    /// ~20% chance each month of a random market event nudging cash/customers outside
+    /// the player's control — keeps outcomes from being fully predictable from choices alone.
+    private func rollMarketEvent() -> MarketEvent? {
+        guard Int.random(in: 0..<5) == 0, let event = MarketEvent.all.randomElement() else { return nil }
+        business.cash += event.cashDelta
+        business.customers = max(0, business.customers + softenedCustomerDelta(event.customerDelta))
+        return event
+    }
+
+    @discardableResult
+    func advanceMonth() -> MonthAdvanceResult {
         let revenue = business.projectedRevenue
         let expenses = business.projectedExpenses
         let profit = revenue - expenses
@@ -169,13 +251,16 @@ final class AppStore: ObservableObject {
         business.month += 1
         business.lessonIndex += 1
 
+        let event = rollMarketEvent()
+
         if business.cash < 0 {
             business.isBankrupt = true
         } else if revenue > Double(business.level) * 1000 {
             business.level += 1
         }
 
-        return monthNarrative(revenue: revenue, expenses: expenses, profit: profit)
+        let narrative = monthNarrative(revenue: revenue, expenses: expenses, profit: profit)
+        return MonthAdvanceResult(narrative: narrative, event: event)
     }
 
     private func monthNarrative(revenue: Double, expenses: Double, profit: Double) -> String {

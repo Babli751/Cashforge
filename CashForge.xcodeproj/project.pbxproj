@@ -24,6 +24,7 @@
 		CD22297E1622410186F143DF /* BusinessStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D0F18493F441B2844B1E19 /* BusinessStartView.swift */; };
 		B0251814E5D54CCBAD8FBA85 /* AdvisorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */; };
 		013DF5FBDE50400596E6F24F /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */; };
+		CC708538850E4C2AB77B1405 /* GameCenterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08F11F5AB244F3AB359481F /* GameCenterService.swift */; };
 		D4572FD39D6F47D1AE6E5B83 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A041DD32CCA7492492EBBF88 /* SyncService.swift */; };
 		E28FB69509E546DFAD51F002 /* AuthSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044061B6FBE4B2BB3A66576 /* AuthSheet.swift */; };
 		5B800A0C7DBF4490A95E5FCC /* ProfileInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */; };
@@ -53,6 +54,7 @@
 		61D0F18493F441B2844B1E19 /* BusinessStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessStartView.swift; sourceTree = "<group>"; };
 		F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisorEngine.swift; sourceTree = "<group>"; };
 		9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		A08F11F5AB244F3AB359481F /* GameCenterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterService.swift; sourceTree = "<group>"; };
 		A041DD32CCA7492492EBBF88 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		6044061B6FBE4B2BB3A66576 /* AuthSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSheet.swift; sourceTree = "<group>"; };
 		4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoService.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				72B10A522C72453D832BEC78A /* PurchaseService.swift */,
 				F2EBF2ACE9AD444C9A3F5B5C /* AdvisorEngine.swift */,
 				9BD8F6F4E40D45DFA5BF4AEB /* AuthService.swift */,
+				A08F11F5AB244F3AB359481F /* GameCenterService.swift */,
 				A041DD32CCA7492492EBBF88 /* SyncService.swift */,
 				4063463B0FDE453AB1767E4D /* ProfileInfoService.swift */,
 			);
@@ -240,6 +243,7 @@
 				CD22297E1622410186F143DF /* BusinessStartView.swift in Sources */,
 				B0251814E5D54CCBAD8FBA85 /* AdvisorEngine.swift in Sources */,
 				013DF5FBDE50400596E6F24F /* AuthService.swift in Sources */,
+				CC708538850E4C2AB77B1405 /* GameCenterService.swift in Sources */,
 				D4572FD39D6F47D1AE6E5B83 /* SyncService.swift in Sources */,
 				E28FB69509E546DFAD51F002 /* AuthSheet.swift in Sources */,
 				5B800A0C7DBF4490A95E5FCC /* ProfileInfoService.swift in Sources */,
