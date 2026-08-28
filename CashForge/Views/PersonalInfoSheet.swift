@@ -10,6 +10,14 @@ struct PersonalInfoSheet: View {
     @State private var isSaving = false
     @State private var errorMessage: String?
 
+    @State private var originalEmail = ""
+    @State private var newEmail = ""
+    @State private var newPassword = ""
+    @State private var currentPassword = ""
+    @State private var credentialMessage: String?
+    @State private var credentialSuccess = false
+    @State private var isSavingCredentials = false
+
     private let service = ProfileInfoService()
 
     var body: some View {
@@ -32,6 +40,36 @@ struct PersonalInfoSheet: View {
                                 Text(errorMessage)
                                     .font(.caption)
                                     .foregroundColor(Theme.danger)
+                            }
+
+                            Divider().padding(.vertical, 8)
+
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Account")
+                                    .font(.headline)
+                                    .foregroundColor(Theme.text(colorScheme))
+
+                                field("Email", text: $newEmail, contentType: .emailAddress, keyboard: .emailAddress)
+                                field("New Password (leave blank to keep current)", text: $newPassword, contentType: .newPassword, isSecure: true)
+                                field("Current Password (required to save changes)", text: $currentPassword, contentType: .password, isSecure: true)
+
+                                if let credentialMessage {
+                                    Text(credentialMessage)
+                                        .font(.caption)
+                                        .foregroundColor(credentialSuccess ? Theme.success : Theme.danger)
+                                }
+
+                                Button {
+                                    Task { await saveCredentials() }
+                                } label: {
+                                    if isSavingCredentials {
+                                        ProgressView()
+                                    } else {
+                                        Text("Update Email / Password")
+                                    }
+                                }
+                                .buttonStyle(GoldButtonStyle(outline: true))
+                                .disabled(isSavingCredentials || currentPassword.isEmpty || (newEmail == originalEmail && newPassword.isEmpty))
                             }
                         }
                         .padding()
@@ -76,26 +114,74 @@ struct PersonalInfoSheet: View {
                     isLoading = false
                     return
                 }
-                if case .success(let fetched) = await service.fetchDetailed(token: token) {
+                if case .success(let email, let fetched) = await service.fetchDetailed(token: token) {
                     info = fetched
+                    originalEmail = email
+                    newEmail = email
                 }
                 isLoading = false
             }
         }
     }
 
-    private func field(_ label: String, text: Binding<String>, contentType: UITextContentType, keyboard: UIKeyboardType = .default) -> some View {
+    private func field(_ label: String, text: Binding<String>, contentType: UITextContentType, keyboard: UIKeyboardType = .default, isSecure: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.caption)
                 .foregroundColor(.gray)
-            TextField(label, text: text)
-                .textContentType(contentType)
-                .keyboardType(keyboard)
-                .padding(12)
-                .background(Theme.card(colorScheme))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .foregroundColor(Theme.text(colorScheme))
+            Group {
+                if isSecure {
+                    SecureField(label, text: text)
+                } else {
+                    TextField(label, text: text)
+                }
+            }
+            .textContentType(contentType)
+            .keyboardType(keyboard)
+            .autocapitalization(.none)
+            .autocorrectionDisabled()
+            .padding(12)
+            .background(Theme.card(colorScheme))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .foregroundColor(Theme.text(colorScheme))
         }
+    }
+
+    private func saveCredentials() async {
+        guard let token = authService.token else {
+            credentialMessage = "Not signed in."
+            credentialSuccess = false
+            return
+        }
+        isSavingCredentials = true
+        defer { isSavingCredentials = false }
+
+        if !newEmail.isEmpty && newEmail != originalEmail {
+            let outcome = await service.updateEmail(newEmail: newEmail, currentPassword: currentPassword, token: token)
+            switch outcome {
+            case .success:
+                authService.updateStoredEmail(newEmail)
+                originalEmail = newEmail
+            case .failure(let message):
+                credentialMessage = message
+                credentialSuccess = false
+                return
+            }
+        }
+
+        if !newPassword.isEmpty {
+            let outcome = await service.updatePassword(newPassword: newPassword, currentPassword: currentPassword, token: token)
+            if case .failure(let message) = outcome {
+                credentialMessage = message
+                credentialSuccess = false
+                return
+            }
+        }
+
+        credentialMessage = "Updated successfully."
+        credentialSuccess = true
+        newEmail = ""
+        newPassword = ""
+        currentPassword = ""
     }
 }

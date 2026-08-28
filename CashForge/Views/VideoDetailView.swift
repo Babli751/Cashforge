@@ -8,6 +8,7 @@ struct VideoDetailView: View {
     @State private var unlocking = false
     @State private var showSummary = false
     @State private var showAuthSheet = false
+    @State private var unlockError: String?
     @Environment(\.colorScheme) var colorScheme
 
     private var current: VideoItem {
@@ -52,18 +53,37 @@ struct VideoDetailView: View {
                             Button {
                                 Task {
                                     unlocking = true
-                                    _ = await store.unlock(video)
+                                    unlockError = nil
+                                    let outcome = await store.unlock(video)
+                                    switch outcome {
+                                    case .success, .cancelled:
+                                        break
+                                    case .pending:
+                                        unlockError = "Purchase is pending approval."
+                                    case .productUnavailable:
+                                        unlockError = "This item isn't available for purchase right now. Please try again later."
+                                    case .verificationFailed:
+                                        unlockError = "Could not verify the purchase. Please try again."
+                                    case .error(let message):
+                                        unlockError = message
+                                    }
                                     unlocking = false
                                 }
                             } label: {
                                 if unlocking {
                                     ProgressView().tint(.black)
                                 } else {
-                                    Text("Unlock for $6.99")
+                                    Text("Unlock All Videos for $6.99")
                                 }
                             }
                             .buttonStyle(GoldButtonStyle())
                             .disabled(unlocking)
+
+                            if let unlockError {
+                                Text(unlockError)
+                                    .font(.caption)
+                                    .foregroundColor(Theme.danger)
+                            }
                         } else {
                             Button("Sign In to Unlock") {
                                 showAuthSheet = true

@@ -8,6 +8,8 @@ final class AuthService: ObservableObject {
     @Published var personalInfo: PersonalInfo?
 
     private let tokenKey = "authToken"
+    private let userIdKey = "authUserId"
+    private let emailKey = "authEmail"
     private let apiBaseURL: String
     private let profileInfoService = ProfileInfoService()
 
@@ -18,9 +20,21 @@ final class AuthService: ObservableObject {
                 KeychainStore.set(newValue, forKey: tokenKey)
             } else {
                 KeychainStore.delete(tokenKey)
+                KeychainStore.delete(userIdKey)
+                KeychainStore.delete(emailKey)
             }
             isSignedIn = newValue != nil
         }
+    }
+
+    /// The signed-in user's ID, used to namespace purchase/unlock data per-account so
+    /// switching accounts on the same device doesn't leak one user's unlocks to another.
+    var userId: String? {
+        KeychainStore.get(userIdKey)
+    }
+
+    var email: String? {
+        KeychainStore.get(emailKey)
     }
 
     init() {
@@ -31,8 +45,14 @@ final class AuthService: ObservableObject {
         }
     }
 
-    func register(email: String, password: String) async {
+    func register(email: String, password: String, fullName: String) async {
         await submit(path: "register", email: email, password: password)
+        guard isSignedIn, !fullName.isEmpty, let token else { return }
+        var info = personalInfo ?? PersonalInfo()
+        info.fullName = fullName
+        if await profileInfoService.save(info, token: token) {
+            personalInfo = info
+        }
     }
 
     func login(email: String, password: String) async {
@@ -48,13 +68,19 @@ final class AuthService: ObservableObject {
     /// (e.g. Profile showing the user's name instead of "Player").
     func refreshPersonalInfo() async {
         guard let token else { return }
-        if case .success(let info) = await profileInfoService.fetchDetailed(token: token) {
+        if case .success(let email, let info) = await profileInfoService.fetchDetailed(token: token) {
             personalInfo = info
+            updateStoredEmail(email)
         }
     }
 
     func updatePersonalInfo(_ info: PersonalInfo) {
         personalInfo = info
+    }
+
+    /// Updates the locally cached email after a successful backend email change.
+    func updateStoredEmail(_ newEmail: String) {
+        KeychainStore.set(newEmail, forKey: emailKey)
     }
 
     private func submit(path: String, email: String, password: String) async {
@@ -80,6 +106,8 @@ final class AuthService: ObservableObject {
             if http.statusCode == 200 || http.statusCode == 201 {
                 let decoded = try JSONDecoder().decode(AuthResponse.self, from: data)
                 token = decoded.token
+                KeychainStore.set(decoded.userId, forKey: userIdKey)
+                KeychainStore.set(email, forKey: emailKey)
                 await refreshPersonalInfo()
             } else {
                 let decoded = try? JSONDecoder().decode(ErrorResponse.self, from: data)

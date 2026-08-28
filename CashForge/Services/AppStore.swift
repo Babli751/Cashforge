@@ -39,6 +39,7 @@ final class AppStore: ObservableObject {
         loadPlayerProfile()
         updateStreak()
         gameCenterService.authenticate()
+        purchaseService.currentUserId = authService.userId
         Task { await loadVideos() }
     }
 
@@ -70,6 +71,7 @@ final class AppStore: ObservableObject {
     /// carry over local guest progress).
     func syncAfterSignIn() async {
         guard let token = authService.token else { return }
+        purchaseService.currentUserId = authService.userId
         isSyncing = true
         defer { isSyncing = false }
         if let remote = await syncService.fetchBusiness(token: token) {
@@ -123,10 +125,23 @@ final class AppStore: ObservableObject {
         }
     }
 
+    /// App Store reviewer account — always sees content unlocked so review doesn't require
+    /// making a real purchase. Must match the "Sign-In Information" on file in App Store Connect.
+    private static let appReviewEmail = "bbbb@bbbb.com"
+
     /// A video only counts as unlocked when the player is signed in — guests always see
     /// videos as locked, even if this device previously purchased an unlock while signed in.
     private func isEffectivelyUnlocked(_ videoID: String) -> Bool {
-        authService.isSignedIn && purchaseService.isUnlocked(videoID: videoID)
+        guard authService.isSignedIn else { return false }
+        if authService.email == Self.appReviewEmail { return true }
+        return purchaseService.isUnlocked(videoID: videoID)
+    }
+
+    /// Clears purchase-service state tied to the signed-out account so a guest or the
+    /// next signed-in user doesn't inherit the previous account's unlocks.
+    func handleSignOut() {
+        purchaseService.currentUserId = nil
+        refreshUnlockState()
     }
 
     /// Recomputes lock state for all loaded videos — call after sign-in/sign-out changes.
@@ -136,13 +151,16 @@ final class AppStore: ObservableObject {
         }
     }
 
-    func unlock(_ video: VideoItem) async -> Bool {
-        guard authService.isSignedIn else { return false }
-        let success = await purchaseService.purchaseUnlock(videoID: video.id)
-        if success, let idx = videos.firstIndex(where: { $0.id == video.id }) {
-            videos[idx].isUnlocked = true
+    /// Purchases lifetime access, which unlocks every video at once (there is no per-video
+    /// product) — refreshes the whole list rather than just the tapped video.
+    @discardableResult
+    func unlock(_ video: VideoItem) async -> PurchaseService.PurchaseOutcome {
+        guard authService.isSignedIn else { return .error("Sign in required") }
+        let outcome = await purchaseService.purchaseUnlock(videoID: video.id)
+        if outcome == .success {
+            refreshUnlockState()
         }
-        return success
+        return outcome
     }
 
     func applyLesson(_ lesson: String) {

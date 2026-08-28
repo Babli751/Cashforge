@@ -63,7 +63,7 @@ struct SettingsView: View {
                         if authService.isSignedIn {
                             Button("Sign Out") {
                                 authService.signOut()
-                                store.refreshUnlockState()
+                                store.handleSignOut()
                                 dismiss()
                             }
                             .buttonStyle(GoldButtonStyle(outline: true))

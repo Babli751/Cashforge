@@ -8,6 +8,7 @@ struct AuthSheet: View {
     @State private var mode: Mode = .login
     @State private var email = ""
     @State private var password = ""
+    @State private var fullName = ""
 
     enum Mode: String, CaseIterable {
         case login = "Sign In"
@@ -29,6 +30,16 @@ struct AuthSheet: View {
                     .padding(.top)
 
                     VStack(spacing: 12) {
+                        if mode == .register {
+                            TextField("Full Name", text: $fullName)
+                                .textContentType(.name)
+                                .autocorrectionDisabled()
+                                .padding(12)
+                                .background(Theme.card(colorScheme))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .foregroundColor(Theme.text(colorScheme))
+                        }
+
                         TextField("Email", text: $email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
@@ -60,7 +71,7 @@ struct AuthSheet: View {
                             if mode == .login {
                                 await authService.login(email: email, password: password)
                             } else {
-                                await authService.register(email: email, password: password)
+                                await authService.register(email: email, password: password, fullName: fullName)
                             }
                             if authService.isSignedIn { dismiss() }
                         }
@@ -72,7 +83,7 @@ struct AuthSheet: View {
                         }
                     }
                     .buttonStyle(GoldButtonStyle())
-                    .disabled(authService.isWorking || email.isEmpty || password.isEmpty)
+                    .disabled(authService.isWorking || email.isEmpty || password.isEmpty || (mode == .register && fullName.isEmpty))
                     .padding(.horizontal)
 
                     Spacer()

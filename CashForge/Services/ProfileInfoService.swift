@@ -17,7 +17,7 @@ final class ProfileInfoService {
     }
 
     enum FetchOutcome {
-        case success(PersonalInfo)
+        case success(email: String, info: PersonalInfo)
         case failure(String)
     }
 
@@ -39,13 +39,14 @@ final class ProfileInfoService {
             }
             do {
                 let decoded = try JSONDecoder().decode(ProfileResponse.self, from: data)
-                return .success(PersonalInfo(
+                let info = PersonalInfo(
                     fullName: decoded.fullName ?? "",
                     phoneNumber: decoded.phoneNumber ?? "",
                     addressLine: decoded.addressLine ?? "",
                     city: decoded.city ?? "",
                     country: decoded.country ?? ""
-                ))
+                )
+                return .success(email: decoded.email, info: info)
             } catch {
                 return .failure("Decode error: \(error). Body: \(bodyText)")
             }
@@ -55,7 +56,7 @@ final class ProfileInfoService {
     }
 
     func fetch(token: String) async -> PersonalInfo? {
-        if case .success(let info) = await fetchDetailed(token: token) {
+        if case .success(_, let info) = await fetchDetailed(token: token) {
             return info
         }
         return nil
@@ -75,6 +76,44 @@ final class ProfileInfoService {
             return false
         }
         return http.statusCode == 204
+    }
+
+    enum CredentialUpdateOutcome {
+        case success
+        case failure(String)
+    }
+
+    /// Changes the signed-in user's email. The backend re-verifies currentPassword server-side.
+    func updateEmail(newEmail: String, currentPassword: String, token: String) async -> CredentialUpdateOutcome {
+        await putCredential(path: "/me/email", body: ["newEmail": newEmail, "currentPassword": currentPassword], token: token)
+    }
+
+    /// Changes the signed-in user's password. The backend re-verifies currentPassword server-side.
+    func updatePassword(newPassword: String, currentPassword: String, token: String) async -> CredentialUpdateOutcome {
+        await putCredential(path: "/me/password", body: ["newPassword": newPassword, "currentPassword": currentPassword], token: token)
+    }
+
+    private func putCredential(path: String, body: [String: String], token: String) async -> CredentialUpdateOutcome {
+        guard let url = URL(string: "\(apiBaseURL)\(path)") else { return .failure("Invalid URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONEncoder().encode(body)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else { return .failure("No HTTP response") }
+            if http.statusCode == 204 { return .success }
+            let decoded = try? JSONDecoder().decode(ErrorResponse.self, from: data)
+            return .failure(decoded?.error ?? "Update failed")
+        } catch {
+            return .failure("Network error: \(error.localizedDescription)")
+        }
+    }
+
+    private struct ErrorResponse: Decodable {
+        let error: String
     }
 
     private struct ProfileResponse: Decodable {
