@@ -93,10 +93,16 @@ final class ProfileInfoService {
         await putCredential(path: "/me/password", body: ["newPassword": newPassword, "currentPassword": currentPassword], token: token)
     }
 
-    private func putCredential(path: String, body: [String: String], token: String) async -> CredentialUpdateOutcome {
+    /// Permanently deletes the signed-in user's account. Irreversible — the backend re-verifies
+    /// currentPassword server-side before deleting.
+    func deleteAccount(currentPassword: String, token: String) async -> CredentialUpdateOutcome {
+        await putCredential(path: "/me/account", method: "DELETE", body: ["currentPassword": currentPassword], token: token)
+    }
+
+    private func putCredential(path: String, method: String = "PUT", body: [String: String], token: String) async -> CredentialUpdateOutcome {
         guard let url = URL(string: "\(apiBaseURL)\(path)") else { return .failure("Invalid URL") }
         var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
+        request.httpMethod = method
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONEncoder().encode(body)

@@ -144,6 +144,16 @@ final class AppStore: ObservableObject {
         refreshUnlockState()
     }
 
+    /// Called after the account itself has been permanently deleted server-side — clears all
+    /// local state tied to it (business progress, player profile) in addition to the usual
+    /// sign-out cleanup, since there's no account left to sync back to.
+    func handleAccountDeletion() {
+        purchaseService.currentUserId = nil
+        business = BusinessState()
+        playerProfile = PlayerProfile()
+        refreshUnlockState()
+    }
+
     /// Recomputes lock state for all loaded videos — call after sign-in/sign-out changes.
     func refreshUnlockState() {
         for i in videos.indices {

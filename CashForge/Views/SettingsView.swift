@@ -1,5 +1,4 @@
 import SwiftUI
-import StoreKit
 
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
@@ -9,7 +8,6 @@ struct SettingsView: View {
 
     @State private var showResetConfirm = false
     @State private var showAuthSheet = false
-    @State private var showManageSubscriptions = false
     @State private var showPersonalInfo = false
 
     @AppStorage("appTheme") private var appThemeRaw: String = AppTheme.dark.rawValue
@@ -50,10 +48,6 @@ struct SettingsView: View {
                             }
                         }
 
-                        section("Billing") {
-                            navRow("Manage Subscription") { showManageSubscriptions = true }
-                        }
-
                         section("Business") {
                             Button("Reset Current Business") { showResetConfirm = true }
                                 .buttonStyle(GoldButtonStyle(outline: true))
@@ -90,7 +84,6 @@ struct SettingsView: View {
             } message: {
                 Text("This clears your current progress and starts a new business.")
             }
-            .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
             .sheet(isPresented: $showAuthSheet) {
                 AuthSheet()
                     .environmentObject(authService)
@@ -98,6 +91,7 @@ struct SettingsView: View {
             .sheet(isPresented: $showPersonalInfo) {
                 PersonalInfoSheet()
                     .environmentObject(authService)
+                    .environmentObject(store)
             }
             .task(id: authService.isSignedIn) {
                 if authService.isSignedIn {

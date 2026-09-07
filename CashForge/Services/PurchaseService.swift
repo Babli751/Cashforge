@@ -1,13 +1,12 @@
 import Foundation
 import StoreKit
 
-/// Wraps StoreKit2 for one-time unlocks, subscription, and lifetime access.
+/// Wraps StoreKit2 for the single "Lifetime Access" purchase that unlocks all videos.
 ///
 /// All purchase state is namespaced by the signed-in user's ID so that switching
 /// accounts on the same device (or playing as a fresh guest) never inherits another
 /// account's unlocks — an app-wide guest account with no ID gets no persisted purchases.
 final class PurchaseService {
-    static let subscriptionProductID = "com.cashforge.subscription.monthly"
     static let lifetimeProductID = "com.cashforge.lifetime"
 
     var currentUserId: String?
@@ -19,7 +18,7 @@ final class PurchaseService {
 
     /// All videos are unlocked together — there is no per-video purchase, just this one check.
     func isUnlocked(videoID: String) -> Bool {
-        hasLifetimeOrSubscription()
+        hasLifetime()
     }
 
     enum PurchaseOutcome: Equatable {
@@ -37,11 +36,6 @@ final class PurchaseService {
     @discardableResult
     func purchaseUnlock(videoID: String) async -> PurchaseOutcome {
         await purchase(productID: Self.lifetimeProductID)
-    }
-
-    @discardableResult
-    func purchaseSubscription() async -> PurchaseOutcome {
-        await purchase(productID: Self.subscriptionProductID)
     }
 
     @discardableResult
@@ -75,10 +69,8 @@ final class PurchaseService {
         }
     }
 
-    private func hasLifetimeOrSubscription() -> Bool {
-        guard let lifetimeKey = namespaced(Self.lifetimeProductID),
-              let subscriptionKey = namespaced(Self.subscriptionProductID) else { return false }
+    private func hasLifetime() -> Bool {
+        guard let lifetimeKey = namespaced(Self.lifetimeProductID) else { return false }
         return UserDefaults.standard.bool(forKey: lifetimeKey)
-            || UserDefaults.standard.bool(forKey: subscriptionKey)
     }
 }

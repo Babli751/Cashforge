@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PersonalInfoSheet: View {
     @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var store: AppStore
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
 
@@ -17,6 +18,11 @@ struct PersonalInfoSheet: View {
     @State private var credentialMessage: String?
     @State private var credentialSuccess = false
     @State private var isSavingCredentials = false
+
+    @State private var showDeleteConfirm = false
+    @State private var deletePassword = ""
+    @State private var deleteError: String?
+    @State private var isDeleting = false
 
     private let service = ProfileInfoService()
 
@@ -71,6 +77,23 @@ struct PersonalInfoSheet: View {
                                 .buttonStyle(GoldButtonStyle(outline: true))
                                 .disabled(isSavingCredentials || currentPassword.isEmpty || (newEmail == originalEmail && newPassword.isEmpty))
                             }
+
+                            Divider().padding(.vertical, 8)
+
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Delete Account")
+                                    .font(.headline)
+                                    .foregroundColor(Theme.danger)
+                                Text("Permanently deletes your account and all data, including your business progress. This cannot be undone.")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+
+                                Button("Delete Account", role: .destructive) {
+                                    showDeleteConfirm = true
+                                }
+                                .buttonStyle(GoldButtonStyle(outline: true))
+                                .tint(Theme.danger)
+                            }
                         }
                         .padding()
                     }
@@ -121,6 +144,46 @@ struct PersonalInfoSheet: View {
                 }
                 isLoading = false
             }
+            .alert("Delete Account?", isPresented: $showDeleteConfirm) {
+                SecureField("Current Password", text: $deletePassword)
+                Button("Cancel", role: .cancel) { deletePassword = "" }
+                Button("Delete", role: .destructive) {
+                    Task { await deleteAccount() }
+                }
+            } message: {
+                Text("This permanently deletes your account and business progress. Enter your password to confirm.")
+            }
+            .alert("Could Not Delete Account", isPresented: Binding(
+                get: { deleteError != nil },
+                set: { if !$0 { deleteError = nil } }
+            )) {
+                Button("OK") {}
+            } message: {
+                Text(deleteError ?? "")
+            }
+        }
+    }
+
+    private func deleteAccount() async {
+        guard let token = authService.token else {
+            deleteError = "Not signed in."
+            return
+        }
+        guard !deletePassword.isEmpty else {
+            deleteError = "Password required."
+            return
+        }
+        isDeleting = true
+        defer { isDeleting = false }
+        let outcome = await service.deleteAccount(currentPassword: deletePassword, token: token)
+        deletePassword = ""
+        switch outcome {
+        case .success:
+            authService.signOut()
+            store.handleAccountDeletion()
+            dismiss()
+        case .failure(let message):
+            deleteError = message
         }
     }
 
