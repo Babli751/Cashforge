@@ -7,7 +7,6 @@ struct VideoDetailView: View {
     let video: VideoItem
     @State private var unlocking = false
     @State private var showSummary = false
-    @State private var showAuthSheet = false
     @State private var unlockError: String?
     @Environment(\.colorScheme) var colorScheme
 
@@ -49,46 +48,45 @@ struct VideoDetailView: View {
                             .foregroundColor(.gray)
                             .blur(radius: 4)
 
-                        if authService.isSignedIn {
-                            Button {
-                                Task {
-                                    unlocking = true
-                                    unlockError = nil
-                                    let outcome = await store.unlock(video)
-                                    switch outcome {
-                                    case .success, .cancelled:
-                                        break
-                                    case .pending:
-                                        unlockError = "Purchase is pending approval."
-                                    case .productUnavailable:
-                                        unlockError = "This item isn't available for purchase right now. Please try again later."
-                                    case .verificationFailed:
-                                        unlockError = "Could not verify the purchase. Please try again."
-                                    case .error(let message):
-                                        unlockError = message
-                                    }
-                                    unlocking = false
+                        Button {
+                            Task {
+                                unlocking = true
+                                unlockError = nil
+                                let outcome = await store.unlock(video)
+                                switch outcome {
+                                case .success, .cancelled:
+                                    break
+                                case .pending:
+                                    unlockError = "Purchase is pending approval."
+                                case .productUnavailable:
+                                    unlockError = "This item isn't available for purchase right now. Please try again later."
+                                case .verificationFailed:
+                                    unlockError = "Could not verify the purchase. Please try again."
+                                case .error(let message):
+                                    unlockError = message
                                 }
-                            } label: {
-                                if unlocking {
-                                    ProgressView().tint(.black)
-                                } else {
-                                    Text("Unlock All Videos for $6.99")
-                                }
+                                unlocking = false
                             }
-                            .buttonStyle(GoldButtonStyle())
-                            .disabled(unlocking)
+                        } label: {
+                            if unlocking {
+                                ProgressView().tint(.black)
+                            } else {
+                                Text("Unlock All Videos for $6.99")
+                            }
+                        }
+                        .buttonStyle(GoldButtonStyle())
+                        .disabled(unlocking)
 
-                            if let unlockError {
-                                Text(unlockError)
-                                    .font(.caption)
-                                    .foregroundColor(Theme.danger)
-                            }
-                        } else {
-                            Button("Sign In to Unlock") {
-                                showAuthSheet = true
-                            }
-                            .buttonStyle(GoldButtonStyle())
+                        if let unlockError {
+                            Text(unlockError)
+                                .font(.caption)
+                                .foregroundColor(Theme.danger)
+                        }
+
+                        if !authService.isSignedIn {
+                            Text("Sign in to sync your purchase across devices — not required to unlock.")
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
                     }
                 }
@@ -103,10 +101,6 @@ struct VideoDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $showSummary) {
             SummaryView(video: current)
-        }
-        .sheet(isPresented: $showAuthSheet) {
-            AuthSheet()
-                .environmentObject(authService)
         }
     }
 }

@@ -39,7 +39,6 @@ final class AppStore: ObservableObject {
         loadPlayerProfile()
         updateStreak()
         gameCenterService.authenticate()
-        purchaseService.currentUserId = authService.userId
         Task { await loadVideos() }
     }
 
@@ -71,7 +70,6 @@ final class AppStore: ObservableObject {
     /// carry over local guest progress).
     func syncAfterSignIn() async {
         guard let token = authService.token else { return }
-        purchaseService.currentUserId = authService.userId
         isSyncing = true
         defer { isSyncing = false }
         if let remote = await syncService.fetchBusiness(token: token) {
@@ -129,26 +127,21 @@ final class AppStore: ObservableObject {
     /// making a real purchase. Must match the "Sign-In Information" on file in App Store Connect.
     private static let appReviewEmail = "bbbb@bbbb.com"
 
-    /// A video only counts as unlocked when the player is signed in — guests always see
-    /// videos as locked, even if this device previously purchased an unlock while signed in.
+    /// Purchases are device-local and don't require an account — the App Review test account
+    /// always sees content unlocked, everyone else's unlock state depends purely on StoreKit.
     private func isEffectivelyUnlocked(_ videoID: String) -> Bool {
-        guard authService.isSignedIn else { return false }
-        if authService.email == Self.appReviewEmail { return true }
+        if authService.isSignedIn && authService.email == Self.appReviewEmail { return true }
         return purchaseService.isUnlocked(videoID: videoID)
     }
 
-    /// Clears purchase-service state tied to the signed-out account so a guest or the
-    /// next signed-in user doesn't inherit the previous account's unlocks.
     func handleSignOut() {
-        purchaseService.currentUserId = nil
         refreshUnlockState()
     }
 
-    /// Called after the account itself has been permanently deleted server-side — clears all
-    /// local state tied to it (business progress, player profile) in addition to the usual
-    /// sign-out cleanup, since there's no account left to sync back to.
+    /// Called after the account itself has been permanently deleted server-side — clears local
+    /// account-tied state (business progress, player profile). Purchases are unaffected since
+    /// they were never tied to the account.
     func handleAccountDeletion() {
-        purchaseService.currentUserId = nil
         business = BusinessState()
         playerProfile = PlayerProfile()
         refreshUnlockState()
@@ -162,10 +155,10 @@ final class AppStore: ObservableObject {
     }
 
     /// Purchases lifetime access, which unlocks every video at once (there is no per-video
-    /// product) — refreshes the whole list rather than just the tapped video.
+    /// product) — refreshes the whole list rather than just the tapped video. Does not require
+    /// sign-in: this content is not account-based, so Apple requires it be purchasable by guests.
     @discardableResult
     func unlock(_ video: VideoItem) async -> PurchaseService.PurchaseOutcome {
-        guard authService.isSignedIn else { return .error("Sign in required") }
         let outcome = await purchaseService.purchaseUnlock(videoID: video.id)
         if outcome == .success {
             refreshUnlockState()

@@ -3,18 +3,12 @@ import StoreKit
 
 /// Wraps StoreKit2 for the single "Lifetime Access" purchase that unlocks all videos.
 ///
-/// All purchase state is namespaced by the signed-in user's ID so that switching
-/// accounts on the same device (or playing as a fresh guest) never inherits another
-/// account's unlocks — an app-wide guest account with no ID gets no persisted purchases.
+/// Purchase state is device-local, not tied to any CashForge account — sign-in is not
+/// required to buy or use this unlock (Apple requires non-account-based IAP content to be
+/// purchasable without registration). StoreKit's own receipt/Apple ID association is what
+/// makes "Restore Purchases" work across devices signed into the same Apple ID.
 final class PurchaseService {
     static let lifetimeProductID = "com.cashforge.lifetime"
-
-    var currentUserId: String?
-
-    private func namespaced(_ key: String) -> String? {
-        guard let currentUserId else { return nil }
-        return "\(currentUserId).\(key)"
-    }
 
     /// All videos are unlocked together — there is no per-video purchase, just this one check.
     func isUnlocked(videoID: String) -> Bool {
@@ -44,7 +38,6 @@ final class PurchaseService {
     }
 
     private func purchase(productID: String) async -> PurchaseOutcome {
-        guard let key = namespaced(productID) else { return .error("Not signed in") }
         do {
             guard let product = try await Product.products(for: [productID]).first else {
                 return .productUnavailable
@@ -53,7 +46,7 @@ final class PurchaseService {
             switch result {
             case .success(let verification):
                 if case .verified = verification {
-                    UserDefaults.standard.set(true, forKey: key)
+                    UserDefaults.standard.set(true, forKey: productID)
                     return .success
                 }
                 return .verificationFailed
@@ -70,7 +63,6 @@ final class PurchaseService {
     }
 
     private func hasLifetime() -> Bool {
-        guard let lifetimeKey = namespaced(Self.lifetimeProductID) else { return false }
-        return UserDefaults.standard.bool(forKey: lifetimeKey)
+        UserDefaults.standard.bool(forKey: Self.lifetimeProductID)
     }
 }
